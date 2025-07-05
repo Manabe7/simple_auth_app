@@ -1,6 +1,9 @@
 import React from 'react'
 import Nav from './Nav'
-import SearchBar from './SearchBar'
+import SearchBar from './SearchBar';
+import { Link } from 'react-router-dom';
+import UserMenu from './UserMenu';
+import { useState } from 'react';
 
 const Header = ({
     setIsSignIn, 
@@ -10,14 +13,27 @@ const Header = ({
     Name, setName,
     Password, setPassword,
     Password2nd, setPassword2nd,
-    UserProfileData, setUserProfileData
+    UserProfileData, setUserProfileData,
+    isHome, setIsHome,
+    handleLogout
 
     }) => {
+    const [showUserMenu, setShowUserMenu] = useState(false);
+
     
+    const handleUserMenu = (e) => {
+        e.preventDefault();
+       return setShowUserMenu(!showUserMenu);
+        
+    }
     return (
-        <header>
-            <h1>E-commerce WebSite</h1>
-            <SearchBar/>
+        <header className='Header-form' onClick={(e)=> e.preventDefault()}>
+            <h1>
+                <Link to={`/`} onClick={()=>setIsHome(true)}> 
+                    E-commerce WebSite
+                </Link>
+            </h1>
+            {isHome && <SearchBar/>}
             <Nav 
                 setIsSignIn={setIsSignIn} 
                 setNewRegister={setNewRegister}
@@ -27,7 +43,15 @@ const Header = ({
                 Password={Password} setPassword={setPassword}
                 Password2nd={Password2nd} setPassword2nd={setPassword2nd}
                 UserProfileData={UserProfileData} setUserProfileData={setUserProfileData}
-                />
+                handleLogout={handleLogout}
+                showUserMenu={showUserMenu}
+                handleUserMenu={handleUserMenu}
+            />
+            {showUserMenu && 
+            <UserMenu 
+                UserProfileData={UserProfileData}
+                handleLogout={handleLogout}
+            />}
         </header>
     )
 }

@@ -1,14 +1,22 @@
 import React from 'react'
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { TiArrowSortedDown } from "react-icons/ti";
+import { TiArrowSortedUp } from "react-icons/ti";
+
 
 const Nav = ({
     setIsSignIn, 
     setNewRegister,
     logIn, setLogIn,
     Name,
-    UserProfileData, setUserProfileData
+    UserProfileData, setUserProfileData,
+    handleLogout,
+    handleUserMenu,
+    showUserMenu
     }) => {
     
+
     const handleLogin = () => {
         return setIsSignIn(true);
     }
@@ -17,41 +25,64 @@ const Nav = ({
         return setNewRegister(true);
     }
 
-    const handleUserProFile = () => {
-        return 
-    }
     return (
             <>
-                {logIn ?  
-                    <nav onClick={(e)=> e.preventDefault()}>
-                        <ul>
-                            <li><a href="">Home</a></li>
-                            <li><a href="">about</a></li>
-                            <li><a href="">info</a></li>
+                
+                <nav onClick={(e)=> e.preventDefault()}>
+                    
+                        <ul className='nav-container-list'>
                             <li>
-                                <a href="" onClick={handleLogin}>
-                                    <Link to='http://localhost:5173/UserProfile'>
-                                        {UserProfileData.Name}
+                                <a href="">
+                                    <Link to={`/`}>
+                                        Home
                                     </Link>
                                 </a>
                             </li>
-                        </ul>
-                    </nav>
+                            <li>
+                                <a href="">
+                                    <Link to={`/About`}>
+                                        About us
+                                    </Link>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    <Link to={`/Contact`}>
+                                        Contact us
+                                    </Link>
+                                </a>
+                            </li>
+                    {logIn && UserProfileData ?
+                        <div className="user-profile">   
+                            <li>
+                                <Link to={`/`}>
+                                    <img src={UserProfileData.Image} alt="user profile" />
+                                </Link>
+                            </li>
+
+                            <li>
+                                <a href="">
+                                    {UserProfileData.Name}
+                                </a>
+                            </li>
+                            <li>
+                                {showUserMenu ?
+                                    <TiArrowSortedUp onClick={handleUserMenu} />
+                                    :
+                                    <TiArrowSortedDown onClick={handleUserMenu} />
+                                }
+                            </li>
+                        </div>
                     :
-                    <nav onClick={(e)=> e.preventDefault()}>
-                        <ul>
-                            <li><a href="">Home</a></li>
-                            <li><a href="">about</a></li>
-                            <li><a href="">info</a></li>
+                        <div>
                             <li><a href="" onClick={handleLogin}>sign in</a></li>
                             <li><a href="" onClick={handleRegister}>get start</a></li>
-                        </ul>
-                    </nav>
+                        </div>
                     }
-               {/*  {!logIn && 
-                    <li><a href="" onClick={handleLogin}>sign in</a></li>
-                    <li><a href="" onClick={handleRegister}>get start</a></li>
-                    } */}
+                    </ul>
+                    
+            </nav>
+                    
             
             </>
     )

@@ -1,12 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { IoIosCloseCircle } from "react-icons/io";
+import { RiSearchEyeLine } from "react-icons/ri";
 
 
 
 const Register = ({
-    handleCloseRegister, 
     setIsSignIn, 
     setNewRegister, 
     handleRegister, 
@@ -14,11 +13,10 @@ const Register = ({
     Name, setName, 
     Password, setPassword,
     Password2nd, setPassword2nd,
+    showPassword, setShowPassword,
+    showPassword2nd, setShowPassword2nd
     }) => {
-    
-    const [close, setClose] = useState(false);
-    
-    
+
     const handleChangetoLogIn = () => {
         setNewRegister(false)
         return setIsSignIn(true);
@@ -31,53 +29,49 @@ const Register = ({
     return (
         <div className='register-form'>
                 <div className='register-box' onSubmit={(e)=> e.preventDefault()}>
-                    {!close ?
                     <IoIosCloseCircleOutline 
-                        className='close-btn' 
-                        onMouseOver={()=> {setClose(true)}} 
-                        onClick={handleCloseRegister}/> 
-                        :<IoIosCloseCircle 
-                        className='close-btn' 
-                        onMouseOut={()=> {setClose(false)}}
-                        onClick={handleCloseRegister}/>}
-                    
+                        className='close-btn'
+                        onClick={()=> setNewRegister(false)}
+                    /> 
                     <h2 className='register-banner'>Registration</h2>
-                    <div onClick={(e)=> e.preventDefault()}>
-                        <button className='register-type-btn'>
-                            Person
-                        </button>
-                        <button className='register-type-btn'>
-                            Store
-                        </button>
+                    <div className='register-input-box'>
+                        <input 
+                            type="text" 
+                            required 
+                            value={Email} 
+                            placeholder='Email' 
+                            onChange={(e)=> {setEmail(e.target.value)}}
+                        />
+                     </div>
+                      <div className='register-input-box'>
+                        <input 
+                            type="text" 
+                            required 
+                            value={Name} 
+                            placeholder='Name'
+                            onChange={(e)=> {setName(e.target.value)}}
+                        />
                     </div>
-                    <input 
-                        type="text" 
-                        required 
-                        value={Email} 
-                        placeholder='Email' 
-                        onChange={(e)=> {setEmail(e.target.value)}}
-                        className='register-input-box'/>
-                    <input 
-                        type="text" 
-                        required 
-                        value={Name} 
-                        placeholder='Name'
-                        onChange={(e)=> {setName(e.target.value)}}
-                        className='register-input-box'/>
-                    <input 
-                        type="text" 
-                        required 
-                        value={Password} 
-                        placeholder='Password'
-                        onChange={(e)=> {setPassword(e.target.value)}}
-                        className='register-input-box'/>
-                    <input 
-                        type="text" 
-                        required 
-                        value={Password2nd} 
-                        placeholder='Confirm Password'
-                        onChange={(e)=> {setPassword2nd(e.target.value)}}
-                        className='register-input-box'/>
+                   <div className='register-input-box-1'>
+                        <input 
+                            type={showPassword ? "text" : "password"} 
+                            required 
+                            value={Password} 
+                            placeholder='Password'
+                            onChange={(e)=> {setPassword(e.target.value)}}
+                        />
+                        <RiSearchEyeLine  className="show-password-btn" onClick={() => setShowPassword(!showPassword)} />
+                    </div>
+                    <div className='register-input-box-1'>
+                        <input 
+                            type={showPassword2nd ? "text" : "password"} 
+                            required 
+                            value={Password2nd} 
+                            placeholder='Password2nd'
+                            onChange={(e)=> {setPassword2nd(e.target.value)}}
+                        />
+                        <RiSearchEyeLine  className="show-password-btn" onClick={() => setShowPassword2nd(!showPassword2nd)} />
+                    </div>
                     <p className='register-submit'>By clicking Register, you agree on our Privacy Policy for W3Docs. </p>
                     <button className='register-submit-btn'  onClick={handleRegister}>
                         Register

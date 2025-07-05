@@ -6,19 +6,24 @@ import NotFound from './NotFound'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import usersDB from './api/usersDB'
 import { isValidEmail, isValidPassword } from './component/Regex'
+import About from './About';
+import Contact from './Contact';
 
 
 function App() {
   const [users, setUsers] = useState([]);
   const [isSignIn , setIsSignIn] = useState(false);
   const [newRegister , setNewRegister] = useState(false);
-  
+  const [isHome, setIsHome] = useState(true);
   const [logIn, setLogIn] = useState(false);
   const [Email, setEmail] = useState('');
   const [Name, setName] = useState('');
   const [Password, setPassword] = useState('');
   const [Password2nd, setPassword2nd] = useState('');
   const [UserProfileData , setUserProfileData] = useState();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2nd, setShowPassword2nd] = useState(false);
+
 
   const checkLogInInputBox =  Email === '' || Password === '';
   const checkInputBox = Email === '' || Name === '' || Password === '' || Password2nd === '';
@@ -39,7 +44,7 @@ function App() {
         }
     }   
 
-    const createAccount = async(Email, Name, Password) => {
+    const createAccount = async (Email, Name, Password) => {
         const User = {Email, Name, Password};
             try {
                 const  response = await usersDB.post('/users', User);
@@ -61,20 +66,23 @@ function App() {
         try {
                 const response = await usersDB.get('/users');
                 const userList = response.data;
-                const checkEmail = userList.find((user) => user.Email === Email)
+                const userData = userList.find((user) => user.Email === Email)
                 if (checkLogInInputBox) {
                     alert('input field is require!');
                 }else if(!checkLogInInputBox) {
-                    if (checkEmail){
-                        const checkPassword = checkEmail.Password === Password
+                    if (userData){
+                        const checkPassword = userData.Password === Password;
                         if (checkPassword) {
                             setIsSignIn(false);
                             setLogIn(true);
-                            setUserProfileData(checkEmail);
+                            setUserProfileData(userData);
+                            setPassword('');
+                            localStorage.setItem('logIn', 'true');
+                            localStorage.setItem('UserProfileData', JSON.stringify(userData));
                         }else if (!checkPassword) {
                             alert('password is not right! try again');
                         }
-                    }else if (!checkEmail) {
+                    }else if (!userData) {
                         alert('Email is not found! try again');
                     }
                 }
@@ -84,24 +92,38 @@ function App() {
                 }
         }
 
+    const handleLogout = () => {
+        setEmail('');
+        setName('');
+        setPassword('');
+        setPassword2nd('');
+        setLogIn(false);
+        setUserProfileData(null);
+        localStorage.removeItem('logIn');
+        localStorage.removeItem('UserProfileData');
+    };
+
     const handleSubmitReg = () => {
         return setNewRegister(false);
     }
-    const handleCloseRegister = () => {
-        return setNewRegister(false);
-    }
-    const handleCloseLogin = () => {
-        return setIsSignIn(false);
-    }
-  /* useEffect(() => {
     
-  }, []) */
+  useEffect(() => {
+    const storedLogIn = localStorage.getItem('logIn');
+    const storedUser = localStorage.getItem('UserProfileData');
+    if (storedLogIn === 'true' && storedUser) {
+        setLogIn(true);
+        setUserProfileData(JSON.parse(storedUser));
+    }
+  }, []);
+
+
   return (
     <main>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={
             <Home 
+              isHome={isHome} setIsHome={setIsHome}
               isSignIn={isSignIn} setIsSignIn={setIsSignIn} 
               newRegister={newRegister} setNewRegister={setNewRegister}
               logIn={logIn} setLogIn={setLogIn}
@@ -111,22 +133,30 @@ function App() {
               Password2nd={Password2nd} setPassword2nd={setPassword2nd}
               UserProfileData={UserProfileData} setUserProfileData={setUserProfileData}
               handleRegister={handleRegister}
-              handleCloseRegister={handleCloseRegister}
               handleSubmitReg={handleSubmitReg} 
-              handleCloseLogin={handleCloseLogin} 
               handleLogin={handleLogin}
+              showPassword={showPassword} setShowPassword={setShowPassword}
+              showPassword2nd={showPassword2nd} setShowPassword2nd={setShowPassword2nd}
+              handleLogout={handleLogout}
             />
             } />
-          <Route path='/UserProfile' element={
+          <Route path='/UserProfile/:id' element={
             <UserProfile 
+              users={users} setUsers={setUsers}
               UserProfileData={UserProfileData} 
               setUserProfileData={setUserProfileData}
               Email={Email} setEmail={setEmail}
               Name={Name} setName={setName}
               Password={Password} setPassword={setPassword}
               Password2nd={Password2nd} setPassword2nd={setPassword2nd}
+              showPassword={showPassword} setShowPassword={setShowPassword}
+              showPassword2nd={showPassword2nd} setShowPassword2nd={setShowPassword2nd}
+              logIn={logIn} setLogIn={setLogIn}
               />}
             />
+          <Route path='/About' element={<About logIn={logIn} UserProfileData={UserProfileData}/>}/>
+          <Route path='/Contact' element={<Contact logIn={logIn} UserProfileData={UserProfileData}/>}/>
+          <Route path='/NotFound' element={<NotFound/>}/>
           <Route path='*' element={<NotFound/>}/>
           
         </Routes>

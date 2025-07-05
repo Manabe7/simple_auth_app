@@ -19,8 +19,11 @@ const Home = ({ users, setUsers,
     handleCloseRegister,
     handleSubmitReg,
     handleLogin,
-    handleCloseLogin
-
+    handleCloseLogin,
+    isHome, setIsHome,
+    showPassword, setShowPassword,
+    showPassword2nd, setShowPassword2nd,
+    handleLogout
 }) => {    
     
 
@@ -29,6 +32,7 @@ const Home = ({ users, setUsers,
     return (
         <>
             <Header 
+                isHome={isHome} setIsHome={setIsHome}
                 setIsSignIn={setIsSignIn} 
                 setNewRegister={setNewRegister}
                 logIn={logIn} setLogIn={setLogIn}
@@ -37,6 +41,7 @@ const Home = ({ users, setUsers,
                 Password={Password} setPassword={setPassword}
                 Password2nd={Password2nd} setPassword2nd={setPassword2nd}
                 UserProfileData={UserProfileData} setUserProfileData={setUserProfileData}
+                handleLogout={handleLogout}
                 />
             <Content/>
             {newRegister && 
@@ -50,6 +55,8 @@ const Home = ({ users, setUsers,
                     handleSubmitReg={handleSubmitReg} 
                     handleCloseRegister={handleCloseRegister}
                     handleRegister={handleRegister}
+                    showPassword={showPassword} setShowPassword={setShowPassword}
+                    showPassword2nd={showPassword2nd} setShowPassword2nd={setShowPassword2nd}
             />}
             {isSignIn && 
                 <LockIn 
@@ -59,7 +66,8 @@ const Home = ({ users, setUsers,
                     Email={Email} setEmail={setEmail}
                     Password={Password} setPassword={setPassword}
                     handleLogin={handleLogin}
-                    handleCloseLogin={handleCloseLogin} 
+                    handleCloseLogin={handleCloseLogin}
+                    showPassword={showPassword} setShowPassword={setShowPassword}
                 />}
             <Footer/>
         </>

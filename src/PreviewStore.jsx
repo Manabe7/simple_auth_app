@@ -9,7 +9,7 @@ const PreviewStore = () => {
                         <p>info</p>
                     <button>store page</button>
                 </div>
-                <img src="D:\learn\E-commerce-web-app\E-commerce-FrontEnd\src\img\7k.JPG" alt="store img" className='store-img' />
+                <img  alt="store img" className='store-img' />
             <button>right</button>
         </div>
     )
